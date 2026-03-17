@@ -1,6 +1,6 @@
 # GlucoCare
 
-Aplicativo para registro e acompanhamento de medições de glicose. Permite cadastrar valores (mg/dL), data e hora, ver resumos e gráficos, e manter um histórico com filtros e busca. Funciona só no navegador (dados no localStorage) ou conectado a um backend opcional (SQLite).
+Aplicativo full-stack para registro e acompanhamento de medições de glicose: frontend em React e backend em Node.js (Express + SQLite). Permite cadastrar valores (mg/dL), data e hora, ver resumos e gráficos, e manter um histórico com filtros e busca. Os dados são persistidos no banco pelo backend; se o servidor não estiver rodando, o front usa localStorage e o header indica "Dados locais".
 
 ## O que o app faz
 
@@ -13,25 +13,16 @@ Aplicativo para registro e acompanhamento de medições de glicose. Permite cada
 - **Exportar CSV**: download do histórico em CSV (UTF-8 com BOM).
 - **Backup e restauro**: exportar todas as medições em JSON; restaurar a partir de um arquivo JSON (substitui os dados atuais, com confirmação). Com backend, o restauro apaga as medições no servidor e recria com as do arquivo.
 - **Tema**: alternância claro/escuro (persistida no localStorage).
-- **Offline**: sem backend, os dados ficam no localStorage; o header indica "Dados locais" ou "Conectado ao servidor".
+- **Indicador de conexão**: o header mostra "Conectado ao servidor" quando a API responde, ou "Dados locais" quando o front está usando apenas localStorage.
 
 ## Tecnologias
 
 - **Frontend**: React 19, TypeScript, Vite. Recharts para gráficos, Day.js para datas. CSS com variáveis e tema claro/escuro.
-- **Backend (opcional)**: Node.js, Express, SQLite. API REST em `/api/*`. Ver [server/README.md](server/README.md) para endpoints e como rodar.
+- **Backend**: Node.js, Express, SQLite. API REST em `/api/*`. Detalhes em [server/README.md](server/README.md).
 
 ## Como rodar
 
-### Só o frontend (dados no navegador)
-
-```bash
-npm install
-npm run dev
-```
-
-Abre em **http://localhost:5173**. Nenhum backend necessário; as medições são salvas no localStorage.
-
-### Frontend + backend (dados no servidor)
+### Com backend (recomendado)
 
 1. Na raiz do projeto:
 
@@ -40,19 +31,23 @@ npm install
 npm run dev
 ```
 
-2. Em outro terminal, subir a API:
+2. Em outro terminal, subir o backend:
 
 ```bash
 npm run server
 ```
 
-Ou, para recarregar o servidor ao editar arquivos:
+Para recarregar o servidor ao editar arquivos do backend:
 
 ```bash
 npm run server:dev
 ```
 
-O backend usa **http://localhost:3001**. O Vite faz proxy de `/api` para esse servidor, então o front continua acessando **http://localhost:5173**.
+O front fica em **http://localhost:5173**, o backend em **http://localhost:3001**. O Vite faz proxy de `/api` para o servidor.
+
+### Só o frontend
+
+Se não subir o backend, o app continua funcionando: as medições ficam no localStorage do navegador. Útil para testar a interface sem rodar o servidor.
 
 ### Build para produção
 
